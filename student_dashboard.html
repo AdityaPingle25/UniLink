@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniLink Student Dashboard</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    display:flex;
+    height:100vh;
+    background:#0f172a;
+    color:white;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+    width:240px;
+    background:#111827;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:600;
+    color:#5865F2;
+    margin-bottom:30px;
+}
+
+.menu{
+    flex:1;
+}
+
+.menu a{
+    display:block;
+    padding:12px;
+    margin-bottom:8px;
+    text-decoration:none;
+    color:#cbd5e1;
+    border-radius:8px;
+    transition:0.3s;
+}
+
+.menu a:hover{
+    background:#1f2937;
+}
+
+/* Logout bottom */
+.logout{
+    margin-top:auto;
+}
+
+.logout a{
+    color:#ef4444;
+}
+
+/* ===== MAIN ===== */
+.main{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+}
+
+/* ===== NAVBAR ===== */
+.navbar{
+    height:60px;
+    background:#111827;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 20px;
+    border-bottom:1px solid #1f2937;
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.profile img{
+    width:35px;
+    height:35px;
+    border-radius:50%;
+}
+
+/* ===== DASHBOARD GRID ===== */
+.dashboard{
+    flex:1;
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:20px;
+    padding:20px;
+    overflow-y:auto;
+}
+
+/* LEFT */
+.left{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+/* Cards */
+.stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:15px;
+}
+
+.card{
+    background:#1e293b;
+    padding:20px;
+    border-radius:12px;
+}
+
+/* Announcements */
+.announcement-box{
+    background:#1e293b;
+    padding:20px;
+    border-radius:12px;
+}
+
+/* RIGHT */
+.right{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.box{
+    background:#1e293b;
+    padding:20px;
+    border-radius:12px;
+}
+
+/* Calendar */
+.calendar{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:5px;
+    margin-top:10px;
+    font-size:14px;
+}
+
+.calendar div{
+    text-align:center;
+    padding:6px;
+    border-radius:6px;
+}
+
+.today{
+    background:#5865F2;
+}
+
+/* Upcoming list */
+.upcoming-item{
+    padding:8px 0;
+    border-bottom:1px solid #334155;
+}
+
+.upcoming-item:last-child{
+    border-bottom:none;
+}
+
+@media(max-width:1000px){
+    .dashboard{
+        grid-template-columns:1fr;
+    }
+    .sidebar{
+        display:none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <div class="logo">UniLink</div>
+
+    <div class="menu">
+        <a href="#">🏠 Dashboard</a>
+        <a href="#">📚 My Subjects</a>
+        <a href="#">📅 Dues</a>
+        <a href="#">📢 Announcements</a>
+        <a href="#">❓ FAQs</a>
+        <a href="#">⚙ Settings</a>
+    </div>
+
+    <div class="logout">
+        <a href="index.html">🚪 Logout</a>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <h3>Welcome, Aditya 👋</h3>
+        <div class="profile">
+            <img src="https://i.pravatar.cc/40">
+            <span>Aditya</span>
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="dashboard">
+
+        <!-- LEFT SIDE -->
+        <div class="left">
+
+            <!-- Stats -->
+            <div class="stats">
+                <div class="card">
+                    <h3>3</h3>
+                    <p>Upcoming Dues</p>
+                </div>
+
+                <div class="card">
+                    <h3>5</h3>
+                    <p>Announcements</p>
+                </div>
+
+                <div class="card">
+                    <h3>2</h3>
+                    <p>Pending Certificates</p>
+                </div>
+            </div>
+
+            <!-- Announcement Section -->
+            <div class="announcement-box">
+                <h3>Latest Announcements</h3>
+                <p>📢 Scholarship Form deadline extended.</p>
+                <p>📢 AI & ML assignment updated.</p>
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="right">
+
+            <!-- Calendar -->
+            <div class="box">
+                <h3>Calendar</h3>
+                <div class="calendar" id="calendar"></div>
+            </div>
+
+            <!-- Upcoming Dynamic -->
+            <div class="box">
+                <h3>Upcoming Dues</h3>
+                <div id="upcomingList"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+// ===== SIMPLE CALENDAR =====
+const calendar = document.getElementById("calendar");
+const today = new Date().getDate();
+
+for(let i=1; i<=30; i++){
+    const day = document.createElement("div");
+    day.innerText = i;
+    if(i === today){
+        day.classList.add("today");
+    }
+    calendar.appendChild(day);
+}
+
+// ===== DYNAMIC UPCOMING (Simulated Teacher Data) =====
+const teacherDues = [
+    { title:"AI Assignment", date:"29 Sept" },
+    { title:"Scholarship Form", date:"30 Sept" },
+    { title:"OS Practical", date:"2 Oct" }
+];
+
+const upcomingList = document.getElementById("upcomingList");
+
+teacherDues.forEach(due=>{
+    const item = document.createElement("div");
+    item.classList.add("upcoming-item");
+    item.innerHTML = `📅 ${due.title} - ${due.date}`;
+    upcomingList.appendChild(item);
+});
+</script>
+
+</body>
+</html>
